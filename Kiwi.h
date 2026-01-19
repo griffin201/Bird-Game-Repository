@@ -12,7 +12,7 @@
 class KiwiBirdClass : public defaultBirdClass
 {
 private:
-    string defaultBirdName = "Dodo";
+    string defaultBirdName = "Kiwi";
 
 public:
 
