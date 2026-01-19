@@ -94,10 +94,10 @@ public:
 		string descriptionOfAction = "";
 		descriptionOfAction = "All stats have been raised";
 
-		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].critkMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].dodgeMultiplier += 0.35;
+		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].critkMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].dodgeMultiplier += 0.35f;
 		selfParty.statMultipliers[self->_partyIndex].offspringAddon += 1;
 
 		return descriptionOfAction;

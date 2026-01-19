@@ -86,8 +86,8 @@ public:
 		string descriptionOfAction = "";
 		descriptionOfAction = "Attack and defense boosted";
 
-		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35;
+		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35f;
 
 		return descriptionOfAction;
 	}
