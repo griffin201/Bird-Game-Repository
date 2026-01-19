@@ -76,13 +76,6 @@ public:
 			_playerParty.livingState[i] = ALIVE;
 		}
 
-
-		// Deleting player party
-		delete _playerParty.birds;
-		delete _playerParty.statMultipliers;
-		delete _playerParty.livingState;
-
-
 		// Deleting enemy party
 		delete _enemyParty.birds;
 		delete _enemyParty.statMultipliers;

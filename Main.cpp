@@ -19,9 +19,9 @@ int main()
 	cout << ICS_INTENSE_WHITE_TEXT;
 
 
-	party plrParty = creatingPlayerParty();
+ 	party plrParty = creatingPlayerParty();
 
-
+	/*
 	party enemyParty = createEnemyParty();
 
 
@@ -29,6 +29,14 @@ int main()
 
 
 	arena.FIGHT();
+	*/
+
+	system("cls");
+
+	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
+		if (plrParty.birds[i] != NULL)
+			cout << i+1 << ") " << plrParty.birds[i]->_name << "\n";
+
 
 
 	cout << "\n\n";
