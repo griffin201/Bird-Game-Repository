@@ -22,7 +22,7 @@ public:
     }
 
     OstrichBirdClass(string birdName)
-        : defaultBirdClass(birdName, 65, 20, 15, 3, 15, 8, Forest)
+        : defaultBirdClass(birdName, 65, 20, 20, 3, 15, 8, Forest)
     {
         if (birdName == "")
             _name = defaultBirdName;

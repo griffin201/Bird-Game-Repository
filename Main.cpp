@@ -4,24 +4,32 @@
 #include <string>
 #include <Windows.h>
 #include <time.h>
-#include "ICS_ConsoleHelper.h"
 
-#include "Arena.h"
-#include "Start Journey.h"
+#include "Town.h"
 
 
-void printGameMenu();
 
 
 int main()
 {
 	srand(time(0));
-	cout << ICS_INTENSE_WHITE_TEXT;
+	makeWhiteText();
 
 
-	party plrParty = creatingPlayerParty();
+ 	party plrParty = creatingPlayerParty();
 
 
+
+	townClass town(plrParty);
+
+	town.townInputLoop();
+
+
+
+
+
+
+	/*
 	party enemyParty = createEnemyParty();
 
 
@@ -29,84 +37,17 @@ int main()
 
 
 	arena.FIGHT();
+	*/
+
+	system("cls");
+
+	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
+		if (plrParty.birds[i] != NULL)
+			cout << i+1 << ") " << plrParty.birds[i]->_name << "\n";
+
 
 
 	cout << "\n\n";
-	system("pause");
-	system("cls");
-
-}
-
-
-
-
-
-void printGameMenu()
-{
-	string emptySpaces = "\t\t\t\t\t\t";
-
-
-	cout << "Make sure u have a microfone, there is audio!\n\n";
-	system("pause");
-	system("cls");
-
-	ICS_sleep(1000);
-	cout << "Made by the same creators of nothing\n\n";
-	ICS_sleep(2000);
-	cout << "With tons of love and hate\n\n";
-	ICS_sleep(2000);
-	cout << "And a game that you didn't ask for...\n\n";
-	ICS_sleep(4000);
-
-
-
-	cout << "\n\n" << emptySpaces << "\t\tBIRD GAME!!!!! ULTIMATE EDITION!!!!\n\n";
-
-	cout << emptySpaces << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@     @@  @@     @@    @@@@@   @@@@  @@@   @@   @    @@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@  @  @@  @@  @  @@  @  @@@     @@    @@        @  @@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@    @@@  @@    @@@  @@ @@@  @@@@@ @@ @@  @  @  @    @@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@  @  @@  @@  @  @@  @  @@@  @  @@    @@  @  @  @  @@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@     @@  @@  @  @@    @@@@@   @@@ @@ @@  @  @  @    @@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@            @@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@    @@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@ @@@@@@@@@@@@@  @@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@  @@@@@@@@@@@@@  @@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@  @@@@@@   @@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@  @@@@        @@@@@@@@@@@@@@@@@@@   #@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@  @@@    @@@@@@@@@@@@@@@@@@@@@    @@@@@@@@  @@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@  @@   @@ @@@@@@@@@@@@@@@@@@@@@@ @   @@@@@@@  @@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@     @@@@  @@@@@@@@@@@@@@@@@@@@@ @@@@   @@@@ @@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@ @@@@@@@       @@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@     @@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    @@@@@@     @@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         @@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@+@......@@@@@@.@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@  .@..@@@@@@@..@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@ @ @@ @@ @@@@@@@@@@@@@@@@@@@@@@@@@.....@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@   @@ @@ @@@@@@@@@@@@@@@@@@@@@@@@@.@.@@ @@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@ @@ @@ @@@@@@@@@@@@@@@@@@@@@@@@@ @@ @@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@ @@    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%\n";
-	cout << emptySpaces << "%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-Jose@@%\n";
-	cout << emptySpaces << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n\n";
-
-
 	system("pause");
 	system("cls");
 

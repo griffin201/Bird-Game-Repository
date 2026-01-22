@@ -16,38 +16,56 @@ class gloriousHeal : public defaultAbilityClass
 public:
 
 	gloriousHeal()
-		: defaultAbilityClass("Glorious Heal", 0, 3, STATUS, SINGLE_ALLY)
+		: defaultAbilityClass("Glorious Heal", 0, 3, STATUS, SELF)
 	{
-		_description[0] = "Heals chosen party member by 50%";
-		_description[1] = "of their current max hp";
+		_description[0] = "Heals party member with the least health";
+		_description[1] = "by 50% of their max hp";
 		_description[2] = "";
 	}
 
 
 
-	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
+	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
 		string results = "";
 
+
+		int weakestAllyIndex = 0;
+
+
+		for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
+		{
+			if (selfParty.birds[i] == NULL)
+				continue;
+
+
+			if (selfParty.birds[i]->_health < selfParty.birds[weakestAllyIndex]->_health)
+				weakestAllyIndex = i;
+		}
+
+		defaultBirdClass* weakestAlly = selfParty.birds[weakestAllyIndex];
+
+
+
 		results += self->_name + " --USED-> " + _name + "|";
-		results += target->_name + " has been healed|";
-		results += target->_health + " -> ";
+		results += weakestAlly->_name + " has been healed|";
+		results += weakestAlly->_health + " -> ";
 		
 
 
 		// Gives healling
-		int halfOfMax = target->_maxHealth / 2;
-		target->_health += halfOfMax;
+		int halfOfMax = weakestAlly->_maxHealth / 2;
+		weakestAlly->_health += halfOfMax;
 
 		
 		// Makes sure its not above max health
-		if (target->_maxHealth < target->_health)
-			target->_health = target->_maxHealth;
+		if (weakestAlly->_maxHealth < weakestAlly->_health)
+			weakestAlly->_health = weakestAlly->_maxHealth;
 
 
 
 
-		results += target->_health;
+		results += weakestAlly->_health;
 		return results;
 	}
 

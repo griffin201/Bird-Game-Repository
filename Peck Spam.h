@@ -59,7 +59,7 @@ public:
 
 				// damage = baseAttack * (self.attack / target.defense) * effectiveness
 				float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
-				float defenseStat = target->_attack * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
+				float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 
 				int finalDamage = int((_baseAttack * (attackStat / defenseStat)) * effectiveness * critValue);
 				totalDmg += finalDamage;

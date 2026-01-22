@@ -16,7 +16,7 @@ class harden : public defaultAbilityClass
 public:
 
 	harden()
-		: defaultAbilityClass("Harden", 0, 1, STATUS, SINGLE_ALLY)
+		: defaultAbilityClass("Harden", 0, 1, STATUS, SELF)
 	{
 		_description[0] = "Boosts defense by x0.25";
 		_description[1] = "";
@@ -25,7 +25,7 @@ public:
 
 
 
-	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
+	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
 		string results = "";
 

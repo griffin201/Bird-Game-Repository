@@ -16,7 +16,7 @@ class moraleSpeech : public defaultAbilityClass
 public:
 
 	moraleSpeech()
-		: defaultAbilityClass("Morale Speech", 0, 3, STATUS, SINGLE_ALLY)
+		: defaultAbilityClass("Morale Speech", 0, 3, STATUS, SELF)
 	{
 		_description[0] = "Boosts team's defense by x0.25";
 		_description[1] = "";
@@ -25,7 +25,7 @@ public:
 
 
 
-	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
+	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
 		string results = "";
 

@@ -22,7 +22,7 @@ public:
     }
 
     ShoebillBirdClass(string birdName)
-        : defaultBirdClass(birdName, 50, 5, 35, 2, 10, 7, Forest)
+        : defaultBirdClass(birdName, 60, 30, 35, 2, 10, 7, Forest)
     {
         if (birdName == "")
             _name = defaultBirdName;
@@ -30,8 +30,8 @@ public:
             _name += " " + defaultBirdName;
 
         _description[0] = "A fat heavy hitter";
-        _description[1] = "Can resist all sorts of attacks";
-        _description[2] = "Relies on defense to kill";
+        _description[1] = "Lazerbeam realy gud fr";
+        _description[2] = "";
 
 
         _abilities = new defaultAbilityClass * [3];

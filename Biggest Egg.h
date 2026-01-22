@@ -18,7 +18,7 @@ public:
 	biggestEgg()
 		: defaultAbilityClass("Biggest Egg", 0, 0, STATUS, SELF)
 	{
-		_description[0] = "Decreases Defense by x0.15";
+		_description[0] = "Decreases Defense by x0.3";
 		_description[1] = "But lays twice as many eggs";
 		_description[2] = "";
 	}
@@ -31,7 +31,7 @@ public:
 
 		results += self->_name + " --USED-> " + _name + "|";
 		results += self->_name + " layed the biggest egg |";
-		results += "But lost some defense | ";
+		results += "But lost major defense | ";
 
 
 
@@ -42,7 +42,7 @@ public:
 
 
 		// Decreasing defense
-		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier -= 0.15f;
+		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier -= 0.3f;
 
 
 

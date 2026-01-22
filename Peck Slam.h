@@ -50,7 +50,7 @@ public:
 			int criticalChance = self->_critChance * selfParty.statMultipliers[self->_partyIndex].critkMultiplier;
 			float critValue = attemptCrit(criticalChance);
 			float effectiveness = getEffectiveness(self->_type, target->_type);
-			float defenseStat = target->_attack * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
+			float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 			float moveAttackStat = _baseAttack;
 
 

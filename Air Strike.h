@@ -48,7 +48,7 @@ public:
 			float critValue = attemptCrit(criticalChance);
 			float effectiveness = getEffectiveness(self->_type, target->_type);
 			float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
-			float defenseStat = target->_attack * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
+			float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 			float moveAttackStat = _baseAttack;
 
 			totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * effectiveness * critValue);

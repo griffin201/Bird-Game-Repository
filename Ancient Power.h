@@ -46,7 +46,7 @@ public:
 			float critValue = attemptCrit(criticalChance);
 			float effectiveness = getEffectiveness(self->_type, target->_type);
 			float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
-			float defenseStat = target->_attack * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
+			float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 			float moveAttackStat = _baseAttack;
 
 
@@ -94,10 +94,10 @@ public:
 		string descriptionOfAction = "";
 		descriptionOfAction = "All stats have been raised";
 
-		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].critkMultiplier += 0.35;
-		selfParty.statMultipliers[self->_partyIndex].dodgeMultiplier += 0.35;
+		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].critkMultiplier += 0.35f;
+		selfParty.statMultipliers[self->_partyIndex].dodgeMultiplier += 0.35f;
 		selfParty.statMultipliers[self->_partyIndex].offspringAddon += 1;
 
 		return descriptionOfAction;

@@ -16,7 +16,7 @@ class heavyLongPeck : public defaultAbilityClass
 public:
 
 	heavyLongPeck()
-		: defaultAbilityClass("Heavy Long Peck", 25, 4, OFFENSIVE, SINGLE_ENEMY)
+		: defaultAbilityClass("Heavy Long Peck", 30, 3, OFFENSIVE, SINGLE_ENEMY)
 	{
 		_description[0] = "High damage and cant miss";
 		_description[1] = "";
@@ -40,7 +40,7 @@ public:
 		float critValue = attemptCrit(criticalChance);
 		float effectiveness = getEffectiveness(self->_type, target->_type);
 		float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
-		float defenseStat = target->_attack * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
+		float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 		float moveAttackStat = _baseAttack;
 
 
