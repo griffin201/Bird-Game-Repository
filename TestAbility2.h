@@ -5,6 +5,7 @@
 #include "Bird Class.h"
 #include "AbilityFunctions.h"
 
+/// THIS IS OUTDATED, DONT USE
 
 
 class twoTargetTest : public defaultAbilityClass

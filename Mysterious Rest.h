@@ -15,6 +15,10 @@ class mysteriousRest : public defaultAbilityClass
 {
 public:
 
+
+	/*
+	* Sets up the move's stats and description
+	*/
 	mysteriousRest()
 		: defaultAbilityClass("Mysterious Rest", 0, 1, STATUS, SELF)
 	{
@@ -24,9 +28,17 @@ public:
 	}
 
 
-
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
@@ -34,42 +46,36 @@ public:
 
 
 
-		mysteriousRestBuff(selfParty, self->_partyIndex);
+		// Randomly buff self
+		int randDebuff = rand() % 5;
+
+
+		// randomly buff a stat
+		if (randDebuff == 0)
+			selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35f;
+
+		else if (randDebuff == 1)
+			selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35f;
+
+		else if (randDebuff == 2)
+			selfParty.statMultipliers[self->_partyIndex].critkMultiplier += 0.35f;
+
+		else if (randDebuff == 3)
+			selfParty.statMultipliers[self->_partyIndex].dodgeMultiplier += 0.35f;
+
+		else if (randDebuff == 4)
+			selfParty.statMultipliers[self->_partyIndex].offspringAddon += 1;
+
+
+		// If the buff is offspring
+		if (randDebuff == 4)
+			selfParty.amountOfEggs += _baseEggPrice;
 
 
 
 		return results;
 	}
 
-	
-	void mysteriousRestBuff(party& selfParty, int indexOfMainBird)
-	{
-
-
-		int randDebuff = rand() % 5;
-
-
-		if (randDebuff == 0)
-			selfParty.statMultipliers[indexOfMainBird].attackMultiplier += 0.35f;
-
-		else if (randDebuff == 1)
-			selfParty.statMultipliers[indexOfMainBird].defenseMultiplier += 0.35f;
-
-		else if (randDebuff == 2)
-			selfParty.statMultipliers[indexOfMainBird].critkMultiplier += 0.35f;
-
-		else if (randDebuff == 3)
-			selfParty.statMultipliers[indexOfMainBird].dodgeMultiplier += 0.35f;
-
-		else if (randDebuff == 4)
-			selfParty.statMultipliers[indexOfMainBird].offspringAddon += 1;
-
-
-		if (randDebuff == 4)
-			selfParty.amountOfEggs += _baseEggPrice;
-
-
-	}
 
 };
 

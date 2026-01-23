@@ -2,16 +2,26 @@
 #include "Start Journey.h"
 
 
+
+
+/*
+* Creates the player party, gets input loop and all that jazz
+* 
+* @return returns the newly created player party
+*/
 party& creatingPlayerParty()
 {
 	SGS.optionSelected = 1;
 
-	printPlayerSelectionAndStuffIDK();
+	// Prints the options for the player to chose
+	printTeamSelection();
 
 
+	// Forever until Confirm is Confirmed
 	while (true)
 	{
 
+		// Get keyboard input
 		if (!_kbhit())
 			continue;
 
@@ -28,13 +38,15 @@ party& creatingPlayerParty()
 		// Pressing z (confirm)
 		if (keyInput == Z_KEY)
 		{
+
+			// Confirming the confirm button, finishes editing the party
 			if (SGS.optionSelected == 4)
 			{
 				if (SGS.birdSelectedIndex[0] == UNDEFINED)
 					continue;
 
 
-
+				// Just makes sure the party isnt empty
 				bool emptyParty = true;
 
 				for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
@@ -48,12 +60,14 @@ party& creatingPlayerParty()
 			}
 
 
+			// Confirming a slot
 			if (SGS.choosingBird == true)
 			{
 				SGS.choosingBird = false;
 				SGS.birdSelectedIndex[SGS.optionSelected - 1] = SGS.birdListSelected;
 			}
 
+			// Confirming a bird
 			else if (SGS.choosingBird == false)
 			{
 				SGS.choosingBird = true;
@@ -67,6 +81,7 @@ party& creatingPlayerParty()
 		// Pressing x (return)
 		if (keyInput == X_KEY)
 		{
+			// Cancells selecting hte bird in the slot
 			if (SGS.choosingBird == true)
 				SGS.choosingBird = false;
 			
@@ -79,9 +94,12 @@ party& creatingPlayerParty()
 		{
 			keyInput = _getch();
 
+
+			// Moves selector up
 			if (keyInput == UP_ARROW)
 			{
 
+				// Moving selector for chosing bird
 				if (SGS.choosingBird == true)
 				{
 					SGS.birdListSelected--;
@@ -92,6 +110,7 @@ party& creatingPlayerParty()
 
 
 
+				// Moving selector for chosing slot
 				if (SGS.choosingBird == false)
 				{
 					SGS.optionSelected--;
@@ -102,9 +121,12 @@ party& creatingPlayerParty()
 
 			}
 
+
+			// Moves selector down
 			else if (keyInput == DOWN_ARROW)
 			{
 
+				// Moving selector for chosing bird
 				if (SGS.choosingBird == true)
 				{
 					SGS.birdListSelected++;
@@ -115,6 +137,7 @@ party& creatingPlayerParty()
 
 
 
+				// Moving selector for chosing slot
 				if (SGS.choosingBird == false)
 				{
 					SGS.optionSelected++;
@@ -126,12 +149,14 @@ party& creatingPlayerParty()
 
 		}
 
-		printPlayerSelectionAndStuffIDK();
+	
+		// Prints the options for the player to chose
+		printTeamSelection();
 
 	}
 
 
-
+	// Finally creates the party, and returns it
 	party plrParty = makePartyBasedOnChoices();
 
 
@@ -139,15 +164,20 @@ party& creatingPlayerParty()
 }
 
 
-void printPlayerSelectionAndStuffIDK()
+/*
+* Prints team selection
+*/
+void printTeamSelection()
 {
 	system("cls");
 
+	// Header
 	cout << "{Z - confirm | X - cancell | Arrow Keys - move up or down}\n\n";
 	cout << " Selected your birds:\n";
 	cout << "----------------------\n\n";
 
 
+	// Depending if its choosing a bird or slot, it will print different things
 	if (SGS.choosingBird)
 		printChoosingBird();
 
@@ -159,7 +189,7 @@ void printPlayerSelectionAndStuffIDK()
 }
 
 
-
+// If current option is choosing slot, then print then print the slots
 void printChoosingSlot()
 {
 	for (int i = 1; i < 4; i++)
@@ -220,6 +250,7 @@ void printChoosingSlot()
 }
 
 
+// If current option is choosing bird, then print then print the birds
 void printChoosingBird()
 {
 
@@ -311,31 +342,41 @@ void printChoosingBird()
 }
 
 
+/*
+* Transforms the selected birds into actual birds
+*/
 party& makePartyBasedOnChoices()
 {
 
+	// Create the party
 	party plrParty;
 
+	// Allocate memory
 	plrParty.birds = new defaultBirdClass * [MAX_BIRDS_PER_PARTY];
 	plrParty.livingState = new livingStatus[MAX_BIRDS_PER_PARTY];
 	plrParty.statMultipliers = new statMultipliesStruct[MAX_BIRDS_PER_PARTY];
 
 
+	// Sets all birds to NULL
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 		plrParty.birds[i] = NULL;
 
 	
+	// Sets the main bird in the loop to NULL
 	defaultBirdClass* mainBird = NULL;
 
 	
+	// For every slot in the party, assign a bird based on the index selected
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 	{
 
+		// No bird selected
 		if (SGS.birdSelectedIndex[i] == UNDEFINED)
 			continue;
 
 
 
+		// A bird selected
 		if (SGS.birdSelectedIndex[i] == 0)
 			mainBird = new HummingbirdClass();
 
@@ -371,7 +412,7 @@ party& makePartyBasedOnChoices()
 
 
 
-
+	// Updates the amount of birds based in the party on the amount of birds in the party (OMG CRAZYYY)
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 		if (plrParty.birds[i] != NULL)
 			plrParty.amountOfBirds++;

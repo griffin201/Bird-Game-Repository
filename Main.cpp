@@ -12,43 +12,18 @@
 
 int main()
 {
+	// Sets random and make text shiny white
 	srand(time(0));
 	makeWhiteText();
 
 
+	// Player creates their party
  	party plrParty = creatingPlayerParty();
 
-
-
+	// Initializes the town
 	townClass town(plrParty);
 
+	// Game input loop in town
 	town.townInputLoop();
-
-
-
-
-
-
-	/*
-	party enemyParty = createEnemyParty();
-
-
-	arenaClass arena(plrParty, enemyParty);
-
-
-	arena.FIGHT();
-	*/
-
-	system("cls");
-
-	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
-		if (plrParty.birds[i] != NULL)
-			cout << i+1 << ") " << plrParty.birds[i]->_name << "\n";
-
-
-
-	cout << "\n\n";
-	system("pause");
-	system("cls");
 
 }

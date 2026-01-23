@@ -10,10 +10,10 @@ const bool ATK_HIT = true;
 
 
 
-float getEffectiveness(birdType selfType, birdType targetType);
-
+// For attempting to hit a critical attack
 float attemptCrit(int critChance);
 
+// For attempting to dodge an attack
 bool attemptDodge(defaultBirdClass* target);
 
 

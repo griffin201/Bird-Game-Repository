@@ -15,6 +15,9 @@ class calmMind : public defaultAbilityClass
 {
 public:
 
+	/*
+	* Sets up the move's stats and description
+	*/
 	calmMind()
 		: defaultAbilityClass("Calm Mind", 0, 1, STATUS, SELF)
 	{
@@ -24,9 +27,17 @@ public:
 	}
 
 
-
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
@@ -34,7 +45,7 @@ public:
 		results += "Defense and Attack drastically increased | ";
 
 
-
+		// Boosts atk and defense
 		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35f;
 		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35f;
 

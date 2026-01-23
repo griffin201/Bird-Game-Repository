@@ -56,7 +56,7 @@ teamWinner arenaClass::FIGHT()
 	while (!someoneLost)
 	{
 		// Setup
-		setUpTurn();
+		setUpRound();
 		printArena();
 
 
@@ -104,7 +104,7 @@ teamWinner arenaClass::FIGHT()
 
 
 
-void arenaClass::setUpTurn()
+void arenaClass::setUpRound()
 {
 	for (int i = 0; i < _playerParty.amountOfBirds; i++)
 		_playerParty.usedTurns[i] = FREE_TURN;
@@ -1184,8 +1184,7 @@ void arenaClass::enemyTurn()
 
 				defaultBirdClass* mainTarget = _playerParty.birds[z];
 
-				float effectiveness = getEffectiveness(mainBird->_type, mainTarget->_type);
-				int finalDamage = int(((float)mainMove->_baseAttack * ((float)mainBird->_attack / (float)mainTarget->_defense)) * effectiveness);
+				int finalDamage = int(((float)mainMove->_baseAttack * ((float)mainBird->_attack / (float)mainTarget->_defense)));
 
 
 				if (highestDmgForATarget < finalDamage)
@@ -1371,16 +1370,6 @@ void arenaClass::changeDescription(defaultBirdClass* bird, teamSide team)
 		_selectedDescription[i] = "";
 
 	// Setup
-	string birdType = "";
-
-	if (bird->_type == Forest)
-		birdType = "Forest";
-	else if (bird->_type == Water)
-		birdType = "Water";
-	else if (bird->_type == Mountain)
-		birdType = "Mountain";
-
-
 	string eggsMultiplier, atkMultipler, defMultiplier, critMultiplier, dodgeMultiplier = "";
 
 	party* mainParty = NULL;
@@ -1427,7 +1416,6 @@ void arenaClass::changeDescription(defaultBirdClass* bird, teamSide team)
 
 	_selectedDescription[8] = "Dodge: " + to_string(bird->_dodgeChance) + "%" + dodgeMultiplier;
 
-	_selectedDescription[9] = " Type: " + birdType;
 
 
 

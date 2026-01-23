@@ -2,7 +2,15 @@
 #include "Ability Class.h"
 
 
-
+/*
+* Sets the abilit's stats
+* 
+* @param name - The name of the move
+* @param baseAtk - The base atk of the move
+* @param baseEgg - the price
+* @param moveType - The type of the move (offensive or status)
+* @param targetsType - The amount of targets the move hits
+*/
 defaultAbilityClass::defaultAbilityClass(string name, int baseAtk, int baseEgg, attackType moveType, attackTargetsType targetsType)
 	: _name(name), _baseAttack(baseAtk), _baseEggPrice(baseEgg), _type(moveType), _targetsType(targetsType) { }
 

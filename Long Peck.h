@@ -15,6 +15,10 @@ class longPeck : public defaultAbilityClass
 {
 public:
 
+
+	/*
+	* Sets up the move's stats and description
+	*/
 	longPeck()
 		: defaultAbilityClass("Long Peck", 10, 1, OFFENSIVE, SINGLE_ENEMY)
 	{
@@ -24,9 +28,18 @@ public:
 	}
 
 
-
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	* @param target - The main target getting hit by the ability
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
@@ -35,21 +48,24 @@ public:
 
 
 
-		// damage = baseAttack * (self.attack / target.defense) * effectiveness * crit
 		// getting values for dmg
-
 		int criticalChance = self->_critChance * selfParty.statMultipliers[self->_partyIndex].critkMultiplier;
 		float critValue = attemptCrit(criticalChance);
-		float effectiveness = getEffectiveness(self->_type, target->_type);
 		float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
 		float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 		float moveAttackStat = _baseAttack;
 
 
-		// Damaging target
-		int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * effectiveness * critValue);
+		// Calculating final damage
+		int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * critValue);
 
 
+		// If crit
+		if (critValue == 1.5f)
+			results += "Critical Hit|";
+
+
+		// Dealing the damage
 		results += "Health: " + to_string(target->_health) + " --> ";
 		target->_health -= totalDmg;
 		results += to_string(target->_health) + " (Dmg: " + to_string(totalDmg) + ")|";

@@ -16,26 +16,39 @@ private:
 
 public:
 
-
+    /*
+    * Sets up the bird's stats and description
+    */
     ShoebillBirdClass()
         : ShoebillBirdClass(defaultBirdName) {
     }
 
+
+
+    /*
+    * Sets up the bird's stats and description
+    *
+    * @param birdName - The name of the bird, used for enemy mostly
+    */
     ShoebillBirdClass(string birdName)
-        : defaultBirdClass(birdName, 60, 30, 35, 2, 10, 7, Forest)
+        : defaultBirdClass(birdName, 60, 30, 35, 2, 10, 7)
     {
+        // If no name was given
         if (birdName == "")
             _name = defaultBirdName;
         else
             _name += " " + defaultBirdName;
 
+        // Description of bird
         _description[0] = "A fat heavy hitter";
         _description[1] = "Lazerbeam realy gud fr";
         _description[2] = "";
 
 
+        // Alocate memory for abilities
         _abilities = new defaultAbilityClass * [3];
 
+        // Gives the bird abilities
         _abilities[0] = new laserbeam();
         _abilities[1] = new heavyLongPeck();
         _abilities[2] = new darkDomain();

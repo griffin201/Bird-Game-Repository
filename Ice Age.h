@@ -15,8 +15,12 @@ class iceAge : public defaultAbilityClass
 {
 public:
 
+
+	/*
+	* Sets up the move's stats and description
+	*/
 	iceAge()
-		: defaultAbilityClass("Ice Age", 45, 14, OFFENSIVE, SINGLE_ENEMY)
+		: defaultAbilityClass("Ice Age", 45, 15, OFFENSIVE, SINGLE_ENEMY)
 	{
 		_description[0] = "A devastating heavy hitter";
 		_description[1] = "Hits the entire enemy party";
@@ -25,8 +29,18 @@ public:
 
 
 
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	* @param target - The main target getting hit by the ability
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
@@ -93,14 +107,22 @@ public:
 	}
 
 
+
+	/*
+	* Hits an individual target for ice age
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	* @param target - The main target getting hit by the ability
+	*/
 	string iceAgeSingle(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target)
 	{
 		string descriptionOfAction = "";
 
 
-		// damage = baseAttack * (self.attack / target.defense) * effectiveness * crit
 		// getting values for dmg
-
 		int criticalChance = self->_critChance * selfParty.statMultipliers[self->_partyIndex].critkMultiplier;
 		float critValue = attemptCrit(criticalChance);
 		float effectiveness = getEffectiveness(self->_type, target->_type);
@@ -113,30 +135,48 @@ public:
 		int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * effectiveness * critValue);
 
 
+		
 
 
-
-		// Description stuff and dealling the damage
+		// Deals the damage
 		descriptionOfAction += "Health: " + to_string(target->_health) + " --> ";
 		target->_health -= totalDmg;
 		descriptionOfAction += to_string(target->_health) + " (Dmg: " + to_string(totalDmg) + ")";
 
+
+		// If its crit
 		if (critValue == 1.5f)
 			descriptionOfAction += " (Crit)";
 
+
 		descriptionOfAction += "|";
+
+
 
 		return descriptionOfAction;
 
 	}
 
 
+
+	/*
+	* Destroys enemy eggs
+	*
+	* @return returns of destroying the eggs
+	* @param targetParty - The target's party
+	*/
 	string iceAgeDestroyEggs(party& targetParty)
 	{
-
+		// Destroys 2 eggs
 		targetParty.amountOfEggs -= 2;
 
-		return "Enemy lost 2 eggs during the attack";
+
+		// Makes sure eggs arent less than 0
+		if (targetParty.amountOfEggs < 0)
+			targetParty.amountOfEggs = 0;
+
+
+		return "Enemy lost eggs during the attack";
 
 	}
 

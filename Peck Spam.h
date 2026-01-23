@@ -15,74 +15,89 @@ class peckSpam : public defaultAbilityClass
 {
 public:
 
+
+	/*
+	* Sets up the move's stats and description
+	*/
 	peckSpam()
-		: defaultAbilityClass("Peck Spam", 3, 1, OFFENSIVE, SINGLE_ENEMY)
+		: defaultAbilityClass("Peck Spam", 4, 1, OFFENSIVE, SINGLE_ENEMY)
 	{
 		_description[0] = "                       ";
-		_description[1] = " Hits the target 3-5 times";
-		_description[2] = "Every Hit has a chance to be dodged";
+		_description[1] = "Hits the target 3-5 times";
+		_description[2] = "Every Hit has a chance to be dodged and crit";
 	}
 
 
 
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	* @param target - The main target getting hit by the ability
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
 		results += "Target: " + target->_name + "|";
 
 
-		int randHits = rand() % 3; // 0/1/2
-		int amountOfHits = 3 + randHits; // Generates 3-5 hits
-		int amountOfSuccesfullHits = 0;
-		int amountOfDodges = 0;
-		int amountOfCrits = 0;
-		int totalDmg = 0;
+		// Peck spam variables
+		int amountOfHits = 3 + rand() % 3;	// Amount of hits the move will use
+		int amountOfSuccesfullHits = 0;		// Amount of succesfull hits
+		int amountOfCrits = 0;				// Amount of crits
+		int totalDmg = 0;					// Total damage dealt
 
 
 
+		// For each time this move will hit
 		for (int i = 0; i < amountOfHits; i++)
 		{
+			// Rolls for dodge
 			bool dodgeStatus = attemptDodge(target);
 
+			// If atk hit
 			if (dodgeStatus == ATK_HIT)
 			{
-				float effectiveness = getEffectiveness(self->_type, target->_type);
+
+				// getting values for dmg
 				int criticalChance = self->_critChance * selfParty.statMultipliers[self->_partyIndex].critkMultiplier;
 				float critValue = attemptCrit(criticalChance);
+				float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
+				float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 
 
+				// If crit
 				if (critValue == 1.5f)
 					amountOfCrits++;
 				
 
-				// damage = baseAttack * (self.attack / target.defense) * effectiveness
-				float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
-				float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
-
-				int finalDamage = int((_baseAttack * (attackStat / defenseStat)) * effectiveness * critValue);
-				totalDmg += finalDamage;
-
+				// Calculates damage
+				int speckDamage = int((_baseAttack * (attackStat / defenseStat)) * critValue);
+				totalDmg += speckDamage;
 				amountOfSuccesfullHits++;
+
 			}
-
-
-
 		}
 
 
 
+		// Describes what happened during the amount of hits
 		results += "Hit a total of: " + to_string(amountOfHits) + "|";
 		results += "Attacks missed: " + to_string(amountOfHits - amountOfSuccesfullHits) + "|";
 		results += "Total Criticals: " + to_string(amountOfCrits) + "|";
 
 
 
+		// Deals the total damage at once
 		results += "Health: " + to_string(target->_health) + " --> ";
 		target->_health -= totalDmg;
 		results += to_string(target->_health) + " (Dmg: " + to_string(totalDmg) + ")";
-
 
 
 

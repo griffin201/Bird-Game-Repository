@@ -2,13 +2,11 @@
 #define ALL_BIRDS_H
 
 
-
+// Simply includes all birds in the game
 #include "HummingBird.h"
-
 #include "Owl.h"
 #include "Ostrich.h"
 #include "Eagle.h"
-
 #include "Penguin.h"
 #include "Dodo.h"
 #include "Kiwi.h"
@@ -17,6 +15,7 @@
 
 
 
+// Also has some names and stuff ig, not really important, just names the enemies
 const int NUMBER_OF_RANDOM_NAMES = 54;
 const string RANDOM_NAMES_FOR_AI_BIRDS[NUMBER_OF_RANDOM_NAMES] =
 {

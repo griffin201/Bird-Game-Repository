@@ -9,24 +9,31 @@
 using namespace std;
 
 
+// The attack type enum
 enum attackType {OFFENSIVE, STATUS};
+
+// The amount of targets the attack hits
 enum attackTargetsType {SINGLE_ENEMY, TWO_ENEMIES, ALL_ENEMIES, SINGLE_ALLY, TWO_ALLIES, ALL_ALLIES, SELF};
 
 
+// Early declaring party and defaultBirdClass
 struct party;
-
 class defaultBirdClass;
 
+
+
+// The main class for making an ability
 class defaultAbilityClass
 {
 public:
 
+	// Attributes of ability
 	string _name = "NO NAME";
 	int _baseAttack = 0;
 	int _baseEggPrice = 1;
 	attackType _type = OFFENSIVE;
 	attackTargetsType _targetsType= SINGLE_ENEMY;
-	string _description[3] = { "NO DESCRIPTION", "SOMETHING IS WRONG IF YOU", "ARE READING THIS"};
+	string _description[3] = { "NO DESCRIPTION", "SOMETHING IS WRONG IF YOU", "ARE READING THIS IN GAME"};
 
 
 

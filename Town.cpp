@@ -4,10 +4,12 @@
 
 
 
-
+// Constructor for town, assigns plr party as variable
 townClass::townClass(party& plrParty)
 	:plrParty(plrParty) { }
 
+
+// Deletes memory allocated for enemies in the tournament
 townClass::~townClass()
 {
 	for (int i = 0; i < amountOfEnemies; i++)
@@ -18,20 +20,26 @@ townClass::~townClass()
 
 
 
+/*
+* Begins the input loop for town
+*/
 void townClass::townInputLoop()
 {
 
+	// Prints the town
 	printTownInputLoop();
 
 
+	// Continues forever no matter what
 	while (true)
 	{
 
+		// If no input continue
 		if (!_kbhit())
 			continue;
 
 
-
+		// Get keyboard input key
 		int keyInput = _getch();
 
 
@@ -44,15 +52,19 @@ void townClass::townInputLoop()
 		if (keyInput == Z_KEY)
 		{
 
+			// Confirming tournament category
 			if (selectedCategory == TOURNAMENT_CATEGORY)
 				playRandomTournament();
 
+			// Confirming switching team category
 			if (selectedCategory == RECREATE_PARTY_CATEGORY)
 				plrParty = creatingPlayerParty();
 
+			// Confirming loading fight from file category
 			if (selectedCategory == LOAD_FIGHT_CATEGORY)
 				loadCustomFightInputLoop();
 
+			// Confirming making custom enemy
 			if (selectedCategory == MAKE_FIGHT_CATEGORY)
 				makeEnemyInputLoop();
 
@@ -62,26 +74,34 @@ void townClass::townInputLoop()
 		// Going up or down / left or right
 		if (keyInput == ARROW_KEYS)
 		{
+			// Get arrow key input key
 			keyInput = _getch();
 
+
+			// If arrow key up
 			if (keyInput == UP_ARROW)
 			{
+				// Move the selector up, also checks for bounds
 				if (selectedCategory <= 0)
 					continue;
 
 				selectedCategory--;
 			}
 
+			// If arrow key down
 			else if (keyInput == DOWN_ARROW)
 			{
+				// Move the selector down, also checks for bounds
 				if (3 <= selectedCategory)
 					continue;
 
 				selectedCategory++;
 			}
 
+			// If arrow key left
 			else if (keyInput == LEFT_ARROW)
 			{
+				// Decrease enemy count if selector is in tournament category
 				if (selectedCategory != TOURNAMENT_CATEGORY)
 					continue;
 
@@ -91,8 +111,10 @@ void townClass::townInputLoop()
 				amountOfEnemies--;
 			}
 
+			// If arrow key right
 			else if (keyInput == RIGHT_ARROW)
 			{
+				// Increase enemy count if selector is in tournament category
 				if (selectedCategory != TOURNAMENT_CATEGORY)
 					continue;
 
@@ -107,6 +129,7 @@ void townClass::townInputLoop()
 
 
 
+		// Prints the town
 		printTownInputLoop();
 
 	}
@@ -117,17 +140,21 @@ void townClass::townInputLoop()
 
 
 
+/*
+* Prints the town, gets called whenever an input is received
+*/
 void townClass::printTownInputLoop()
 {
 	system("cls");
 
+	// Printing headers
 	cout << "{Z - confirm | X - cancell | Arrow Keys - move up or down / increase or decrease enemy count}\n\n";
 	cout << " Select your mode:\n";
 	cout << "-------------------\n\n";
 
 	
 
-	
+	// Printing categories, if they are selected, a small space will be made, indicating the selected option
 	cout << " > ";
 	if (selectedCategory == TOURNAMENT_CATEGORY)
 		cout << "  ";
@@ -161,7 +188,7 @@ void townClass::printTownInputLoop()
 
 
 
-
+	// Prints description for each category
 	cout << "-------------------\n\n";
 
 
@@ -200,18 +227,24 @@ void townClass::printTownInputLoop()
 #pragma region Tournament Logic
 
 
+/*
+* Starts the tournament gamemode
+*/
 void townClass::playRandomTournament()
 {
+	// Makes all the enemy parties for the tournament
+	makeEnemiesForTournament();
 
-	makeRandomEnemies();
 
-
+	// For each enemy in the tournament, fight him
 	for (currentFight = 0; currentFight < amountOfEnemies; currentFight++)
 	{
+		// Prints the tournament list before beginning battle
 		printTournamentList();
 		system("cls");
 
 
+		// Selects the main party that will fight
 		party mainEnemy = *enemiesInTheTournament[currentFight];
 
 		
@@ -227,11 +260,12 @@ void townClass::playRandomTournament()
 		}
 
 
-
+		// Start up the arena to fight
 		arenaClass arenaOfThisFight(plrParty, mainEnemy);
 		teamWinner winner = arenaOfThisFight.FIGHT();
 
 
+		// If the enemy won, end the tournament
 		if (winner == ENEMY_WIN)
 		{
 			system("cls");
@@ -244,11 +278,15 @@ void townClass::playRandomTournament()
 
 
 
+		// Buffs the player party
 		for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 		{
+			// Makes sure bird exists
 			if (plrParty.birds[i] == NULL)
 				continue;
 
+
+			// Selects the main bird to be buffed
 			defaultBirdClass* mainBird = plrParty.birds[i];
 
 
@@ -286,19 +324,24 @@ void townClass::playRandomTournament()
 }
 
 
+/*
+* Prints the list of enemies in the tournament
+*/
 void townClass::printTournamentList()
 {
-
 	system("cls");
 
+	// Prints header
 	cout << "Tournament Hall\n";
 	cout << "-----------------------\n\n";
 
-
+	
+	// Prints the list of all enemies in the tournament
 	for (int i = 0; i < amountOfEnemies; i++)
 	{
 		cout << i + 1 << ") ";
 
+		// Prints their status, if they lost or won
 		if (i < currentFight)
 			cout << "- Defeated -";
 
@@ -320,10 +363,16 @@ void townClass::printTournamentList()
 }
 
 
-void townClass::makeRandomEnemies()
+/*
+* Makes the enemies in the tournament
+*/
+void townClass::makeEnemiesForTournament()
 {
+	// Allocates memory depending on the amount of enemies to be fought
 	enemiesInTheTournament = new party * [amountOfEnemies];
 
+
+	// Creates a random party and assigns for every enemy
 	for (int i = 0; i < amountOfEnemies; i++)
 	{
 		party* newParty = createRandomParty();
@@ -340,22 +389,30 @@ void townClass::makeRandomEnemies()
 #pragma region Loading Custom Fight
 
 
+/*
+* Main input loop for loading enemies from file
+*/
 void townClass::loadCustomFightInputLoop()
 {
 
+	// Prints the options
 	printLoadCustomFightInputLoop();
 
+	// Turns true when there if the file is valid and pressed confirm
 	bool readyToFight = false;
 
 
+	// Continues until a winner is found or returned by pressing X
 	while (true)
 	{
 
+
+		// If no input continue
 		if (!_kbhit())
 			continue;
 
 
-
+		// Get keyboard input
 		int keyInput = _getch();
 
 
@@ -367,9 +424,11 @@ void townClass::loadCustomFightInputLoop()
 		if (keyInput == Z_KEY)
 		{
 
+			// Confirming to input the file name
 			if (loadFightCategory == NAMING_FILE_CATEGORY)
 				getFileName();
 
+			// Confirming to fight the enemy in the inputed file
 			if (loadFightCategory == CONFIRM_LOAD_CATEGORY)
 				readyToFight = checkForValidFile();
 
@@ -379,6 +438,7 @@ void townClass::loadCustomFightInputLoop()
 		// Pressing x (return)
 		if (keyInput == X_KEY)
 		{
+			// Simply returns to the main town input loop
 			return;
 		}
 
@@ -387,18 +447,24 @@ void townClass::loadCustomFightInputLoop()
 		// Going up or down / left or right
 		if (keyInput == ARROW_KEYS)
 		{
+			// Gets arrow keys input
 			keyInput = _getch();
 
+
+			// If input was up key
 			if (keyInput == UP_ARROW)
 			{
+				// Move the selector up
 				if (loadFightCategory <= 0)
 					continue;
 
 				loadFightCategory--;
 			}
 
+			// If input was down key
 			else if (keyInput == DOWN_ARROW)
 			{
+				// Move the selector down
 				if (1 <= loadFightCategory)
 					continue;
 
@@ -412,35 +478,39 @@ void townClass::loadCustomFightInputLoop()
 		// Initianing the fight if ready
 		if (readyToFight)
 		{
+			// Calls to load enemy party and begin fight, after so, returns to main town input loop
 			fightCustomEnemy();
 			return;
 		}
 
 
-
+		// Prints the options
 		printLoadCustomFightInputLoop();
 
 	}
 }
 
 
+/*
+* Prints the Load Custom Fight options for the input loop
+*/
 void townClass::printLoadCustomFightInputLoop()
 {
 	system("cls");
 
+	// Header
 	cout << "{Z - confirm | X - cancell | Arrow Keys - move up or down}\n\n";
 	cout << " Load the file (.txt):\n";
 	cout << "-----------------------\n\n";
 
 
-
+	
+	// Depending on the selected category there will be an empty space, indincating the selected option
 	cout << " > ";
 	if (loadFightCategory == NAMING_FILE_CATEGORY)
 		cout << "  ";
 
 	cout << "File Directory: " << fileDirectory << "\n\n";
-
-
 
 
 	cout << " > ";
@@ -450,15 +520,21 @@ void townClass::printLoadCustomFightInputLoop()
 	cout << "Confirm?\n\n";
 
 
+
+	// Extra info at the bottom
 	cout << "-----------------------\n\n";
 	cout << "Make sure the names match!\n\n";
 
 
+	// If file could not be opened
 	if (couldOpenFile == false)
 		cout << "!! COULDN'T FIND/LOAD THE FILE !!\n";
 		cout << "!! Make sure you typed .txt at the end !!\n";
 }
 
+/*
+* Gets user input to get the file name
+*/
 void townClass::getFileName()
 {
 	system("cls");
@@ -467,26 +543,43 @@ void townClass::getFileName()
 
 }
 
+/*
+* Check if the main file directory is valid
+*/
 bool townClass::checkForValidFile()
 {
+	// Loads the file
 	ifstream file(fileDirectory);
 
 
+	// If file exists and was opened
 	if (file.is_open())
 	{
+		// Close and return true to indicate there is a file
 		file.close();
 		return true;
 	}
 
+
+	// Otherwise say that file couldnt be found
 	couldOpenFile = false;
 	return false;
 
 }
 
+/*
+* Transforms the main given symbol for a bird into a bird
+* 
+* @return returns the bird class assotiated with the given symbol
+* @param birdSymbol - The main character symbol for the bird
+*/
 defaultBirdClass* townClass::makeBirdBasedOnSymbol(char birdSymbol)
 {
+	// Declares the main bird
 	defaultBirdClass* mainBird = NULL;
 
+
+	// depending on the symbol create a new bird and assign it to main bird
 	switch (birdSymbol)
 	{
 	case 'c':
@@ -530,13 +623,19 @@ defaultBirdClass* townClass::makeBirdBasedOnSymbol(char birdSymbol)
 		break;
 	}
 
+
+	// Return the main bird created
 	return mainBird;
 
 }
 
+/*
+* Loads the enemy from the file and begins the fight
+*/
 void townClass::fightCustomEnemy()
 {
 
+	// Opens the file
 	ifstream file(fileDirectory);
 
 
@@ -546,11 +645,13 @@ void townClass::fightCustomEnemy()
 
 
 
+	// If file was opened
 	if (file.is_open())
 	{
 		string line = "";
 		int lineNum = 1;
 
+		// Load each bird in the file
 		while (getline(file, line))
 		{
 			if (lineNum == 1)
@@ -569,17 +670,19 @@ void townClass::fightCustomEnemy()
 		file.close();
 	}
 
+	// If couldnt open file, make text yellow to indicate error
 	else
 		makeYellowText();
 
 
 
-
+	// Loads the enemy
 	party loadedEnemy = createEnemyParty(bird1, bird2, bird3);
 
 	system("cls");
 	system("pause");
 
+	// Tells what birds you will be fighting
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 		if (loadedEnemy.birds[i] != NULL)
 			cout << i + 1 << ") " << loadedEnemy.birds[i]->_name << "\n";
@@ -587,13 +690,13 @@ void townClass::fightCustomEnemy()
 	system("pause");
 
 
+	// Begins fight
 	arenaClass fightingCustom(plrParty, loadedEnemy);
-
 	fightingCustom.FIGHT();
 
 
 
-	// heals player team
+	// heals player team after battle
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 	{
 		if (plrParty.birds[i] == NULL)
@@ -619,21 +722,27 @@ void townClass::fightCustomEnemy()
 #pragma region Making Custom Fight
 
 
+/*
+* Main input loop for making an enemy
+*/
 void townClass::makeEnemyInputLoop()
 {
 
+	// Prints the options
 	printMakeEnemyInputLoop();
 
 
 
+	// Input loop until X is pressed
 	while (true)
 	{
 
+		// If no input return
 		if (!_kbhit())
 			continue;
 
 
-
+		// Get keyboard input
 		int keyInput = _getch();
 
 
@@ -645,22 +754,25 @@ void townClass::makeEnemyInputLoop()
 		if (keyInput == Z_KEY)
 		{
 
+			// Confirming to name the file
 			if (makeFightCategory == NAMING_FILE_CATEGORY)
 				getFileName();
 
-
+			// Confirming to select a bird for slot 1
 			if (makeFightCategory == BIRD_ONE_CATEGORY)
 				selectingBirdToAddToParty(0);
 
+			// Confirming to select a bird for slot 2
 			if (makeFightCategory == BIRD_TWO_CATEGORY)
 				if (selectedBirdsName[0] != ' ')
 					selectingBirdToAddToParty(1);
 
+			// Confirming to select a bird for slot 3
 			if (makeFightCategory == BIRD_THREE_CATEGORY)
 				if (selectedBirdsName[1] != ' ')
 					selectingBirdToAddToParty(2);
 
-
+			// Confirming to export the file
 			if (makeFightCategory == CONFIRM_SAVE_CATEGORY)
 				if (selectedBirdsName[0] != ' ')
 					if (exportCustomFight() == true)
@@ -680,18 +792,24 @@ void townClass::makeEnemyInputLoop()
 		// Going up or down / left or right
 		if (keyInput == ARROW_KEYS)
 		{
+			// Get arrow keys input
 			keyInput = _getch();
 
+
+			// if up arrow pressed
 			if (keyInput == UP_ARROW)
 			{
+				// Move selector up
 				if (makeFightCategory <= 0)
 					continue;
 
 				makeFightCategory--;
 			}
 
+			// if down arrow pressed
 			else if (keyInput == DOWN_ARROW)
 			{
+				// Move selector down
 				if (4 <= makeFightCategory)
 					continue;
 
@@ -709,16 +827,21 @@ void townClass::makeEnemyInputLoop()
 }
 
 
+/*
+* Prints options and information for making the enemy
+*/
 void townClass::printMakeEnemyInputLoop()
 {
 	system("cls");
 
+	// Header
 	cout << "{Z - confirm | X - cancell | Arrow Keys - move up or down}\n\n";
 	cout << " Load the file (.txt):\n";
 	cout << "-----------------------\n\n";
 
 
 
+	// Depending on the selected category there will be an empty space, indincating the selected option
 	cout << " > ";
 	if (makeFightCategory == NAMING_FILE_CATEGORY)
 		cout << "  ";
@@ -760,6 +883,7 @@ void townClass::printMakeEnemyInputLoop()
 
 
 
+	// Extra info at the bottom
 
 	cout << "-----------------------\n\n";
 	cout << "Your exported file can be found in the project files!\n\n";
@@ -770,19 +894,28 @@ void townClass::printMakeEnemyInputLoop()
 		cout << "!! File Created and Saved !!\n";
 }
 
+/*
+* Selects the bird to add to party
+* 
+* @param index - used the index of the bird to modify in the party
+*/
 void townClass::selectingBirdToAddToParty(int index)
 {
 
+	// Prints the bird options
 	printingSelectingBirdToParty();
 
+
+	// Forever input loop until X or a bird is selected
 	while (true)
 	{
 
+		// Check for input
 		if (!_kbhit())
 			continue;
 
 
-
+		// Get keyboard input
 		int keyInput = _getch();
 
 
@@ -794,6 +927,7 @@ void townClass::selectingBirdToAddToParty(int index)
 		if (keyInput == Z_KEY)
 		{
 
+			// Confirming what bird they want to add to their party
 			if (selectingBirdToMakeCategory == 0)
 				selectedBirdsName[index] = 'h';
 
@@ -836,8 +970,11 @@ void townClass::selectingBirdToAddToParty(int index)
 		// Going up or down / left or right
 		if (keyInput == ARROW_KEYS)
 		{
+			// Get arrow keys input
 			keyInput = _getch();
 
+			
+			// Moving the selector up
 			if (keyInput == UP_ARROW)
 			{
 				if (selectingBirdToMakeCategory <= 0)
@@ -846,6 +983,7 @@ void townClass::selectingBirdToAddToParty(int index)
 				selectingBirdToMakeCategory--;
 			}
 
+			// Moving the selector odnw
 			else if (keyInput == DOWN_ARROW)
 			{
 				if (8 <= selectingBirdToMakeCategory)
@@ -858,6 +996,7 @@ void townClass::selectingBirdToAddToParty(int index)
 
 
 
+		// Prints the bird options
 		printingSelectingBirdToParty();
 
 
@@ -866,16 +1005,21 @@ void townClass::selectingBirdToAddToParty(int index)
 
 }
 
+/*
+* prints the list of birds to select from
+*/
 void townClass::printingSelectingBirdToParty()
 {
 
 	system("cls");
 
+	// Header
 	cout << "{Z - confirm | X - cancell | Arrow Keys - move up or down}\n\n";
 	cout << " Selected your birds:\n";
 	cout << "----------------------\n\n";
 
 
+	// Printing the list of all birds
 	for (int i = 0; i < 9; i++)
 	{
 		cout << "-> ";
@@ -917,6 +1061,9 @@ void townClass::printingSelectingBirdToParty()
 	}
 
 
+
+
+	// Printing the description depending on the bird
 	cout << "\n----------------------\n";
 
 
@@ -956,15 +1103,21 @@ void townClass::printingSelectingBirdToParty()
 
 }
 
+/*
+* Exports the custom fight duh
+*/
 bool townClass::exportCustomFight()
 {
+	// Automatically adds .txt at the end
 	fileDirectory += ".txt";
 
 
+	// Makes the file
 	ofstream file(fileDirectory);
 
 	if (file.is_open())
 	{
+		// Then adds the birds selected
 		file << selectedBirdsName[0] << "\n";
 		file << selectedBirdsName[1] << "\n";
 		file << selectedBirdsName[2] << "\n";
@@ -973,11 +1126,9 @@ bool townClass::exportCustomFight()
 		file.close();
 		return true;
 	}
-	else
-		makeYellowText();
 
-
-
+	// This should basically never run
+	makeYellowText();
 	cout << "SOMETHING HAPPENED!";
 	system("pause");
 	return false;

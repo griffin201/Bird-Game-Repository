@@ -1,11 +1,12 @@
 #pragma once
-#include <conio.h>
+#include <conio.h>		// For keyboard input
 #include "allBirds.h"
 #include "Essentials.h"
 
 
 
 
+// Structure for selecting player birds
 struct
 {
 
@@ -21,19 +22,18 @@ struct
 
 
 
-
+// Creating the player party input loop
 party& creatingPlayerParty();
 
-
-void printPlayerSelectionAndStuffIDK();
-
-
+// Gets all the selected birds numbers and makes them into birds then packets them into a party
+party& makePartyBasedOnChoices();
 
 
+// Prints the input loop for creating player party
+void printTeamSelection();
+
+// Prints when selecting slot for bird
 void printChoosingSlot();
 
-
+// Prints when selecting bird
 void printChoosingBird();
-
-
-party& makePartyBasedOnChoices();

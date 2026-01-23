@@ -15,6 +15,10 @@ class prehistoricPeck : public defaultAbilityClass
 {
 public:
 
+
+	/*
+	* Sets up the move's stats and description
+	*/
 	prehistoricPeck()
 		: defaultAbilityClass("Prehistoric Peck", 15, 2, OFFENSIVE, SINGLE_ENEMY)
 	{
@@ -25,36 +29,47 @@ public:
 
 
 
+
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	* @param target - The main target getting hit by the ability
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty, defaultBirdClass* target) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
 		results += "Target: " + target->_name + "|";
 
 
+		// Rolls for dodge
 		bool dodgeStatus = attemptDodge(target);
 
 
 
+		// If atk hit
 		if (dodgeStatus == ATK_HIT)
 		{
-			// damage = baseAttack * (self.attack / target.defense) * effectiveness * crit
 
 			// getting values for dmg
 			int criticalChance = self->_critChance * selfParty.statMultipliers[self->_partyIndex].critkMultiplier;
 			float critValue = attemptCrit(criticalChance);
-			float effectiveness = getEffectiveness(self->_type, target->_type);
 			float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
 			float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 			float moveAttackStat = _baseAttack;
 
 
 			// Calculating final damage
-			int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * effectiveness * critValue);
+			int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * critValue);
 
 
-
+			// If its crit
 			if (critValue == 1.5f)
 				results += "Critical Hit|";
 
@@ -67,6 +82,9 @@ public:
 
 
 		}
+
+
+		// Atk missing
 		else
 			results += "But it missed|";
 
@@ -81,15 +99,21 @@ public:
 	}
 
 
+
+	/*
+	* Gives the bird the boost
+	*
+	* @return returns the description of what the boost did
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	*/
 	string prehistoricBoost(defaultBirdClass* self, party& selfParty)
 	{
-		string descriptionOfAction = "";
-		descriptionOfAction = "Attack and defense boosted";
-
+		// Boosts the atk and def
 		selfParty.statMultipliers[self->_partyIndex].attackMultiplier += 0.35f;
 		selfParty.statMultipliers[self->_partyIndex].defenseMultiplier += 0.35f;
 
-		return descriptionOfAction;
+		return "Attack and defense boosted";
 	}
 
 

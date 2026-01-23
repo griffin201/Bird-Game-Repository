@@ -15,6 +15,10 @@ class gatherFood : public defaultAbilityClass
 {
 public:
 
+
+	/*
+	* Sets up the move's stats and description
+	*/
 	gatherFood()
 		: defaultAbilityClass("Gather Food", 0, 1, STATUS, SELF)
 	{
@@ -25,15 +29,26 @@ public:
 
 
 
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
-		results += "Offspring quantity increased by 1|";
 
 
-		selfParty.statMultipliers[self->_partyIndex].offspringAddon += rand() % 2 + 1;
+		// Increasing offspring
+		int offspringBuff = rand() % 2 + 1;
+		selfParty.statMultipliers[self->_partyIndex].offspringAddon += offspringBuff;
+		results += "Offspring quantity increased by " + to_string(offspringBuff) + "|";
 
 
 

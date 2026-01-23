@@ -15,6 +15,9 @@ class darkDomain : public defaultAbilityClass
 {
 public:
 
+	/*
+	* Sets up the move's stats and description
+	*/
 	darkDomain()
 		: defaultAbilityClass("Dark Domain", 0, 3, STATUS, SELF)
 	{
@@ -25,8 +28,17 @@ public:
 
 
 
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param self - The main bird casting the ability
+	* @param selfParty - The caster's party
+	* @param targetParty - The target's party
+	*/
 	string useAbility(defaultBirdClass* self, party& selfParty, party& targetParty) override
 	{
+		// Initializes the description for the move is used
 		string results = "";
 
 		results += self->_name + " --USED-> " + _name + "|";
@@ -48,20 +60,33 @@ public:
 	}
 
 
+
+	/*
+	* Uses the ability - Varies depending on the ability being used
+	*
+	* @return returns a description of the move
+	* @param targetParty - The target's party
+	* @param IndexOfBird - the target's index
+	*/
 	void darkDomainDebuff(party& targetParty, int indexOfBird)
 	{
+		// Pick the random debuff
 		int randDebuff = rand() % 4;
 
 
+		// atk debuff
 		if (randDebuff == 0)
 			targetParty.statMultipliers[indexOfBird].attackMultiplier -= 0.15f;
 
+		// Defense debuff
 		else if (randDebuff == 1)
 			targetParty.statMultipliers[indexOfBird].defenseMultiplier -= 0.15f;
 
+		// Crit debuff
 		else if (randDebuff == 2)
 			targetParty.statMultipliers[indexOfBird].critkMultiplier -= 0.15f;
 
+		// Dodge debuff
 		else if (randDebuff == 3)
 			targetParty.statMultipliers[indexOfBird].dodgeMultiplier -= 0.15f;
 

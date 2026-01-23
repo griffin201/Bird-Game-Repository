@@ -8,14 +8,17 @@
 using namespace std;
 
 
-enum birdType { Water, Forest, Mountain };
-
+// Early declares ability class
 class defaultAbilityClass;
 
+
+// The main class for making birds
 class defaultBirdClass
 {
 public:
 
+
+	// Main attributes of a bird
 	string _name = "imaginary bird";
 	string _description[3] = { "", "", "" };
 	int _partyIndex = 0;
@@ -28,13 +31,16 @@ public:
 	int _critChance = 8;
 	int _dodgeChance = 5;
 
-	birdType _type = Forest; // Mountain -> Forest -> Water -> Mountain
-
 	defaultAbilityClass** _abilities = NULL;
 	int _abilityCount = 0;
 
 
-	defaultBirdClass(string name , int hp, int atk, int def, int offSpring, int crit, int dodge, birdType type);
+	// Constructor for the bird
+	defaultBirdClass(string name, int hp, int atk, int def, int offSpring, int crit, int dodge);
+
+
+	// Desconstructor for the bird
+	~defaultBirdClass();
 
 };
 

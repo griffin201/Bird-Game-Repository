@@ -6,6 +6,7 @@
 #include "AbilityFunctions.h"
 #include "Essentials.h"
 
+/// THIS IS OUTDATED, DONT USE
 
 
 class threeTargetTest : public defaultAbilityClass

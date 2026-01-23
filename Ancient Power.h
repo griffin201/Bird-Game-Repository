@@ -39,22 +39,20 @@ public:
 
 		if (dodgeStatus == ATK_HIT)
 		{
-			// damage = baseAttack * (self.attack / target.defense) * effectiveness * crit
-
+			
 			// getting values for dmg
 			int criticalChance = self->_critChance * selfParty.statMultipliers[self->_partyIndex].critkMultiplier;
 			float critValue = attemptCrit(criticalChance);
-			float effectiveness = getEffectiveness(self->_type, target->_type);
 			float attackStat = self->_attack * selfParty.statMultipliers[self->_partyIndex].attackMultiplier;
 			float defenseStat = target->_defense * targetParty.statMultipliers[target->_partyIndex].defenseMultiplier;
 			float moveAttackStat = _baseAttack;
 
 
 			// Calculating final damage
-			int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * effectiveness * critValue);
+			int totalDmg = int((moveAttackStat * (attackStat / defenseStat)) * critValue);
 
 
-
+			// If its crit
 			if (critValue == 1.5f)
 				results += "Critical Hit|";
 
@@ -65,8 +63,9 @@ public:
 			results += to_string(target->_health) + " (Dmg: " + to_string(totalDmg) + ")|";
 
 
-
 		}
+
+		// Atk missing
 		else
 			results += "But it missed|";
 
