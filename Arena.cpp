@@ -5,6 +5,9 @@
 
 
 
+/*
+* Initializes the arena, prepares both parties before fighting
+*/
 arenaClass::arenaClass(party& playerParty, party& enemyParty)
 	: _playerParty(playerParty), _enemyParty(enemyParty)
 {
@@ -39,6 +42,9 @@ arenaClass::arenaClass(party& playerParty, party& enemyParty)
 
 }
 
+/*
+* Deletes enemy party
+*/
 arenaClass::~arenaClass()
 {
 
@@ -49,10 +55,17 @@ arenaClass::~arenaClass()
 }
 
 
+
+/*
+* Begins the fight
+* 
+* @return returns the winner of battle
+*/
 teamWinner arenaClass::FIGHT()
 {
 	bool someoneLost = false;
 
+	// Continue fighting until someone lost
 	while (!someoneLost)
 	{
 		// Setup
@@ -103,9 +116,12 @@ teamWinner arenaClass::FIGHT()
 
 
 
-
+/*
+* Sets up the round, by allowing all birds to play again
+*/
 void arenaClass::setUpRound()
 {
+	// Allows all the birds to get their turn
 	for (int i = 0; i < _playerParty.amountOfBirds; i++)
 		_playerParty.usedTurns[i] = FREE_TURN;
 
@@ -115,9 +131,13 @@ void arenaClass::setUpRound()
 }
 
 
+/*
+* Handles and prints all that you see, its the game UI
+*/
 void arenaClass::printArena()
 {
 
+	// Structure of code:
 	// Initialize some values
 	// Get values that will be used in printing
 	// Print the values in an order
@@ -415,17 +435,18 @@ void arenaClass::printArena()
 
 
 
-
+/*
+* Handles input and logic for player turn and actions
+*/
 void arenaClass::playerTurn()
 {
 
 	bool playerTurn = true;
-
 	bool validInput = false;
+	int actionSelected = 0;
 
-	int indexMoving = 0;
 
-
+	// While player has birds that can play
 	while (playerTurn)
 	{
 		if (!_kbhit())
@@ -437,18 +458,18 @@ void arenaClass::playerTurn()
 
 		// // - Getting Input - // //
 
-		// Pressing x (return)
-		if (keyInput == X_KEY)
+		// Pressing z (confirm)
+		if (keyInput == Z_KEY)
 		{
-			indexMoving = MOVING_PREVIOUS_CATEGORY;
+			actionSelected = MOVING_NEXT_CATEGORY;
 			validInput = true;
 		}
 
 
-		// Pressing z (confirm)
-		if (keyInput == Z_KEY)
+		// Pressing x (return)
+		if (keyInput == X_KEY)
 		{
-			indexMoving = MOVING_NEXT_CATEGORY;
+			actionSelected = MOVING_PREVIOUS_CATEGORY;
 			validInput = true;
 		}
 
@@ -456,9 +477,10 @@ void arenaClass::playerTurn()
 		// Pressing c (rest bird)
 		if (keyInput == C_KEY)
 		{
-			indexMoving = RESTING;
+			actionSelected = RESTING;
 			validInput = true;
 		}
+
 
 		// Going up or down, left or right
 		if (keyInput == ARROW_KEYS)
@@ -467,28 +489,29 @@ void arenaClass::playerTurn()
 
 			if (keyInput == UP_ARROW)
 			{
-				indexMoving = -1;
+				actionSelected = -1;
 				validInput = true;
 			}
 			else if (keyInput == DOWN_ARROW)
 			{
-				indexMoving = 1;
+				actionSelected = 1;
 				validInput = true;
 			}
 			else if (keyInput == LEFT_ARROW)
 			{
-				indexMoving = -2;
+				actionSelected = -2;
 				validInput = true;
 			}
 			else if (keyInput == RIGHT_ARROW)
 			{
-				indexMoving = 2;
+				actionSelected = 2;
 				validInput = true;
 			}
 
 		}
 
 
+		// Main bird and move that the selector is selecting
 		defaultBirdClass* mainBird = _playerParty.birds[_birdSelectionIndex];
 		defaultAbilityClass* mainMove = NULL;
 
@@ -503,7 +526,7 @@ void arenaClass::playerTurn()
 		if (_currentSelection == BIRD_SELECTION)
 		{
 
-			if (indexMoving == MOVING_NEXT_CATEGORY)
+			if (actionSelected == MOVING_NEXT_CATEGORY)
 			{
 				if (mainBird == NULL)
 					continue;
@@ -518,41 +541,41 @@ void arenaClass::playerTurn()
 				_moveSelectionIndex = 0;
 				_currentSelection = MOVE_SELECTION;
 			}
-			else if (indexMoving == MOVING_PREVIOUS_CATEGORY)
+			else if (actionSelected == MOVING_PREVIOUS_CATEGORY)
 			{
-				indexMoving = 0;
+				actionSelected = 0;
 			}
-			else if (indexMoving != RESTING)
+			else if (actionSelected != RESTING)
 			{
 
 
-				if (indexMoving == 2)
+				if (actionSelected == 2)
 				{
 					_currentSelection = ENEMY_INSPECT;
-					indexMoving = 0;
+					actionSelected = 0;
 					_enemiesSelectionIndex = _birdSelectionIndex;
 				}
-				else if (indexMoving == -2)
+				else if (actionSelected == -2)
 				{
-					indexMoving = 0;
+					actionSelected = 0;
 					validInput = false;
 				}
 
-				_birdSelectionIndex += indexMoving;
+				_birdSelectionIndex += actionSelected;
 
 				if (_birdSelectionIndex < 0)
 					_birdSelectionIndex = 0;
 				else if (MAX_BIRDS_PER_PARTY <= _birdSelectionIndex)
 					_birdSelectionIndex = MAX_BIRDS_PER_PARTY - 1;
 
-				indexMoving = 0;
+				actionSelected = 0;
 			}
 
 		}
 		else if (_currentSelection == MOVE_SELECTION)
 		{
 
-			if (indexMoving == MOVING_NEXT_CATEGORY)
+			if (actionSelected == MOVING_NEXT_CATEGORY)
 			{
 
 				// If enough eggs to use move
@@ -564,30 +587,30 @@ void arenaClass::playerTurn()
 						_enemiesSelected[i] = NOT_SELECTED;
 
 					_currentSelection = ENEMY_SELECTION;
-					indexMoving = 0;
+					actionSelected = 0;
 				}
 
 				// if selected move is self
 				attackTargetsType type = mainMove->_targetsType;
 				if (type == SELF or type == ALL_ALLIES or type == ALL_ENEMIES)
-					indexMoving = SELECTED_TARGET;
+					actionSelected = SELECTED_TARGET;
 
 			}
-			else if (indexMoving == MOVING_PREVIOUS_CATEGORY)
+			else if (actionSelected == MOVING_PREVIOUS_CATEGORY)
 			{
 				_currentSelection = BIRD_SELECTION;
-				indexMoving = 0;
+				actionSelected = 0;
 			}
 			else
 			{
-				_moveSelectionIndex += indexMoving;
+				_moveSelectionIndex += actionSelected;
 
 				if (_moveSelectionIndex < 0)
 					_moveSelectionIndex = 0;
 				else if (mainBird->_abilityCount <= _moveSelectionIndex)
 					_moveSelectionIndex = mainBird->_abilityCount - 1;
 
-				indexMoving = 0;
+				actionSelected = 0;
 			}
 
 
@@ -595,7 +618,7 @@ void arenaClass::playerTurn()
 		else if (_currentSelection == ENEMY_SELECTION)
 		{
 
-			if (indexMoving == MOVING_NEXT_CATEGORY)
+			if (actionSelected == MOVING_NEXT_CATEGORY)
 			{
 				if (_enemyParty.birds[_enemiesSelectionIndex] == NULL)
 					continue;
@@ -605,9 +628,9 @@ void arenaClass::playerTurn()
 
 
 
-				indexMoving = SELECTED_TARGET;
+				actionSelected = SELECTED_TARGET;
 			}
-			else if (indexMoving == MOVING_PREVIOUS_CATEGORY)
+			else if (actionSelected == MOVING_PREVIOUS_CATEGORY)
 			{
 				if (_enemiesSelected[_enemiesSelectionIndex] == SELECTED)
 					_enemiesSelected[_enemiesSelectionIndex] = NOT_SELECTED;
@@ -624,7 +647,7 @@ void arenaClass::playerTurn()
 			}
 			else
 			{
-				_enemiesSelectionIndex += indexMoving;
+				_enemiesSelectionIndex += actionSelected;
 
 
 
@@ -639,25 +662,25 @@ void arenaClass::playerTurn()
 		else if (_currentSelection == ENEMY_INSPECT)
 		{
 
-			if (indexMoving == 2)
+			if (actionSelected == 2)
 			{
-				indexMoving = 0;
+				actionSelected = 0;
 				validInput = false;
 			}
-			else if (indexMoving == -2)
+			else if (actionSelected == -2)
 			{
 				_currentSelection = BIRD_SELECTION;
 				_birdSelectionIndex = _enemiesSelectionIndex;
-				indexMoving = 0;
+				actionSelected = 0;
 			}
-			else if (indexMoving == MOVING_NEXT_CATEGORY)
-				indexMoving = 0;
-			else if (indexMoving == MOVING_PREVIOUS_CATEGORY)
-				indexMoving = 0;
+			else if (actionSelected == MOVING_NEXT_CATEGORY)
+				actionSelected = 0;
+			else if (actionSelected == MOVING_PREVIOUS_CATEGORY)
+				actionSelected = 0;
 
 
 
-			_enemiesSelectionIndex += indexMoving;
+			_enemiesSelectionIndex += actionSelected;
 
 
 			if (_enemiesSelectionIndex < 0)
@@ -676,9 +699,10 @@ void arenaClass::playerTurn()
 
 
 		// // - Resting Move - // //
-		if (indexMoving == RESTING)
+		if (actionSelected == RESTING)
 		{
 
+			// Makes sure the bird exists
 			if (mainBird == NULL)
 				continue;
 			if (_playerParty.livingState[_birdSelectionIndex] == DEAD)
@@ -707,7 +731,7 @@ void arenaClass::playerTurn()
 		// // - Using Move - // //
 
 		// Confirm Using an ability
-		if (indexMoving == SELECTED_TARGET)
+		if (actionSelected == SELECTED_TARGET)
 		{
 
 			// First checking if can use move due to price
@@ -757,7 +781,7 @@ void arenaClass::playerTurn()
 
 
 
-			// Checking if player selected enough targets
+			// Checking if player selected enough targets, so it finally attacks
 			if (amountOfTargetsMoveCanHit <= amountOfSelectedTargets)
 			{
 				// Variable for storing results from move
@@ -768,6 +792,8 @@ void arenaClass::playerTurn()
 				defaultBirdClass* selectedTargets[MAX_BIRDS_PER_PARTY];
 
 
+				// Stores the selected birds into a simple linear array
+				// *selected* *not selected* *selected* ----> *selected* *selected* *not selected* 
 				for (int i = 0; i < 3; i++)
 				{
 
@@ -786,7 +812,7 @@ void arenaClass::playerTurn()
 
 
 
-				// Uses the move
+				// Uses the move, calls the conrespoinding function based on the move's targets
 				switch (mainMove->_targetsType)
 				{
 				case SELF:
@@ -903,6 +929,9 @@ void arenaClass::playerTurn()
 }
 
 
+/*
+* Handles enemy AI, turn, and actions
+*/
 void arenaClass::enemyTurn()
 {
 	// Enemy AI Here
@@ -1319,7 +1348,9 @@ void arenaClass::enemyTurn()
 
 
 
-
+/*
+* Contains main logic for resting a bird
+*/
 void arenaClass::restBird(party& mainParty, defaultBirdClass* mainBird, int indexInParty)
 {
 	// Resting Variables
@@ -1347,8 +1378,12 @@ void arenaClass::restBird(party& mainParty, defaultBirdClass* mainBird, int inde
 
 
 
+/*
+* Turn results into readable description
+*/
 void arenaClass::turnResultsIntoDescription(string results)
 {
+	// Separates results into multiple strings stored in the description array by finding the first of '|', also known as the separator
 	for (int i = 0; i < 6; i++)
 	{
 		int indexToBend = results.find_first_of("|");
@@ -1364,21 +1399,30 @@ void arenaClass::turnResultsIntoDescription(string results)
 	}
 }
 
+/*
+* Changes the main description based on birds
+*/
 void arenaClass::changeDescription(defaultBirdClass* bird, teamSide team)
 {
+	// Reset the description
 	for (int i = 0; i < 13; i++)
 		_selectedDescription[i] = "";
 
+
 	// Setup
 	string eggsMultiplier, atkMultipler, defMultiplier, critMultiplier, dodgeMultiplier = "";
-
 	party* mainParty = NULL;
 
+
+	// Assigns the main party
 	if (team == PLAYER)
 		mainParty = &_playerParty;
-	else if (team == ENEMY)
+	else
 		mainParty = &_enemyParty;
 
+
+
+	// Show the stats multiplier if the stat has been changed
 	statMultipliesStruct& stats = mainParty->statMultipliers[bird->_partyIndex];
 
 	if (stats.offspringAddon != 0)
@@ -1400,7 +1444,7 @@ void arenaClass::changeDescription(defaultBirdClass* bird, teamSide team)
 
 
 
-
+	// Changes the description for the bird
 	_selectedDescription[1] = "      " + bird->_name;
 
 
@@ -1417,29 +1461,32 @@ void arenaClass::changeDescription(defaultBirdClass* bird, teamSide team)
 	_selectedDescription[8] = "Dodge: " + to_string(bird->_dodgeChance) + "%" + dodgeMultiplier;
 
 
-
-
-	//_selectedDescription[11] = bird->_description[0];
-	//_selectedDescription[12] = bird->_description[1];
-	//_selectedDescription[13] = bird->_description[2];
 }
 
+/*
+* Changes the main description based on moves
+*/
 void arenaClass::changeDescription(defaultAbilityClass* ability)
 {
 
+	// resets description
 	for (int i = 0; i < 13; i++)
 		_selectedDescription[i] = "";
 
+
+	// Variables
 	string atkType = "";
 	string amountOfTargets = "";
 
 
+	// Get the move type
 	if (ability->_type == OFFENSIVE)
 		atkType = "Offensive";
 	else
 		atkType = "Status";
 
 
+	// Get the target count
 	if (ability->_targetsType == SINGLE_ENEMY)
 		amountOfTargets = "1 Enemy";
 	else if (ability->_targetsType == SINGLE_ALLY)
@@ -1457,6 +1504,7 @@ void arenaClass::changeDescription(defaultAbilityClass* ability)
 
 
 
+	// Updates the description based on move attributes
 	_selectedDescription[1] = "  ---- " + ability->_name + " ----";
 
 
@@ -1475,6 +1523,10 @@ void arenaClass::changeDescription(defaultAbilityClass* ability)
 
 
 
+/*
+* Makes enemies "Dead" if their hp is less than 0
+* And awards the team for knocking out a bird
+*/
 void arenaClass::checkForDeaths()
 {
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
@@ -1514,11 +1566,17 @@ void arenaClass::checkForDeaths()
 	}
 }
 
+/*
+* Checks for winner basically
+*/
 teamWinner arenaClass::checkForDeadTeam()
 {
+	
 	bool allOfPlrTeamDead = true;
 	bool allOfAiTeamDead = true;
 
+
+	// If someone is alive for each team, then continue the game
 	for (int i = 0; i < MAX_BIRDS_PER_PARTY; i++)
 	{
 		if (_playerParty.livingState[i] == ALIVE)
@@ -1529,9 +1587,11 @@ teamWinner arenaClass::checkForDeadTeam()
 	}
 
 
+	// If all of plr team is dead, plr lost
 	if (allOfPlrTeamDead == true)
 		return ENEMY_WIN;
 
+	// If all of enemy team is dead, plr won
 	if (allOfAiTeamDead == true)
 		return PLAYER_WIN;
 
@@ -1547,7 +1607,9 @@ teamWinner arenaClass::checkForDeadTeam()
 
 
 
-
+/*
+* Gets a random bird to give the enemy
+*/
 defaultBirdClass* getRandomBirdForEnemyParty(string birdName)
 {
 	int randBird = rand() % 9;
@@ -1601,10 +1663,16 @@ defaultBirdClass* getRandomBirdForEnemyParty(string birdName)
 }
 
 
+/*
+* Creates player party based on the given birds, also checks wether or not they are existing
+*/
 party createPlayerParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, defaultBirdClass* birdThree)
 {
+	// Makes the party
 	party plrParty;
 
+
+	// Checks if birds are real of fake
 	if (birdOne != NULL and birdTwo != NULL and birdThree != NULL)
 		plrParty.amountOfBirds = 3;
 	else if (birdOne != NULL and birdTwo != NULL)
@@ -1615,11 +1683,13 @@ party createPlayerParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, de
 		cout << "BIRDONE DOESNT EXIST?????";
 
 
+	// Allocates memory
 	plrParty.birds = new defaultBirdClass * [MAX_BIRDS_PER_PARTY];
 	plrParty.livingState = new livingStatus[MAX_BIRDS_PER_PARTY];
 	plrParty.statMultipliers = new statMultipliesStruct[MAX_BIRDS_PER_PARTY];
 
 
+	// Assigns the birds to the party
 	plrParty.birds[0] = birdOne;
 	plrParty.birds[1] = birdTwo;
 	plrParty.birds[2] = birdThree;
@@ -1627,8 +1697,12 @@ party createPlayerParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, de
 	return plrParty;
 }
 
+/*
+* Creates enemy party based on the given birds, also checks wether or not they are existing
+*/
 party createEnemyParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, defaultBirdClass* birdThree)
 {
+	// Makes the party
 	party enemyParty;
 	statMultipliesStruct resetedStats;
 
@@ -1645,8 +1719,7 @@ party createEnemyParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, def
 
 
 
-	// If birds were provided, use them //
-
+	// Make sure the birds are real
 	if (birdOne != NULL)
 	{
 		enemyParty.amountOfBirds = 1;
@@ -1664,6 +1737,7 @@ party createEnemyParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, def
 	}
 
 
+	// Get the bird in good state before the fight
 	for (int i = 0; i < enemyParty.amountOfBirds; i++)
 	{
 		enemyParty.birds[i]->_health = enemyParty.birds[i]->_maxHealth;
@@ -1672,16 +1746,20 @@ party createEnemyParty(defaultBirdClass* birdOne, defaultBirdClass* birdTwo, def
 	}
 
 
+
 	if (enemyParty.amountOfBirds != 0)
 		return enemyParty;
 
 
 
-
+	// This shouldnt print
 	cout << makeYellowText();
 	return enemyParty;
 }
 
+/*
+* Creates a random party
+*/
 party* createRandomParty()
 {
 
@@ -1699,8 +1777,8 @@ party* createRandomParty()
 
 
 	
-
-	randomParty->amountOfBirds = rand() % 3 + 1;
+	// For all birds in this party, assign a random one
+	randomParty->amountOfBirds = 3;
 
 	for (int i = 0; i < randomParty->amountOfBirds; i++)
 	{
@@ -1715,6 +1793,9 @@ party* createRandomParty()
 }
 
 
+
+
+// Simply prints a separtor for the battle UI
 void printSeparatorLines()
 {
 	for (int i = 0; i < 30; i++)
@@ -1729,6 +1810,7 @@ void printSeparatorLines()
 		cout << "-";
 }
 
+// Gets the console window width in characters, used for moving to column
 int getConsoleWidth() {
 	// Returns the console window size in character.
 	// "I CAN HANDLE 67 CHARACTERS BEFORE I NEED TO WRAP THE TEXT"
@@ -1738,6 +1820,7 @@ int getConsoleWidth() {
 	return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 }
 
+// Moves the cursor to the collumn if its ahead of it
 void moveToColumn(int col)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -1747,16 +1830,19 @@ void moveToColumn(int col)
 }
 
 
+// Makes the text gray
 string makeGrayText()
 {
 	return ICS_textColor(100, 100, 100);
 }
 
+// Makes the text yellow
 string makeYellowText()
 {
 	return ICS_textColor(200, 200, 10);
 }
 
+// Makes the text instense white
 string makeWhiteText()
 {
 	return ICS_INTENSE_WHITE_TEXT;
